@@ -3,9 +3,9 @@ import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import styles from '../styles/Home.module.css'
 import Link from 'next/link';
-import { database, firebase } from '../services/firebase.js';
+import { database, firebase } from '../services/firebase';
 
-interface data {
+interface coordI {
   nome: string,
   indicadora: string,
   lngCoord: number,
@@ -15,6 +15,12 @@ interface reloadedI {
   reloaded: boolean,
   setReloaded: boolean
 }
+interface dbDataI {
+  indicadora: string,
+  latCoord: number,
+  lngCoord: number,
+  nome: string
+}
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiaXNyYWVsc29hcmVzIiwiYSI6ImNrdmUyeDhsM2JkYm4yem1udDJ4azA3cnkifQ.Zlsg1JsFYg85GMH6qSAPvQ";
@@ -23,14 +29,14 @@ function App(): JSX.Element {
 
   const [nome, setNome] = useState('');
   const [indicadora, setIndicadora] = useState('');
-  const [latCoord, setLatCoord] = useState()
-  const [lngCoord, setLngCoord] = useState()
-  const mapContainer = useRef<HTMLHeadingElement>(null);
-  const map = useRef<HTMLHeadingElement>(null);
-  const [reloaded, setReloaded] = useState<reloadedI>();
-  const [lng, setLng] = useState('');
-  const [lat, setLat] = useState('');
-  const [zoom, setZoom] = useState(2);
+  const [latCoord, setLatCoord] = useState<any>()
+  const [lngCoord, setLngCoord] = useState<any>()
+  const mapContainer = useRef<any>(null);
+  const map = useRef<any>(null);
+  const [reloaded, setReloaded] = useState<any>();
+  const [lng, setLng] = useState<number>(0);
+  const [lat, setLat] = useState<number>(0);
+  const [zoom, setZoom] = useState<number>(2);
   const markerHeight = 50;
   const markerRadius = 50;
   const linearOffset = 25;
@@ -50,7 +56,7 @@ function App(): JSX.Element {
     const ref = database.ref('empresa');
     ref.on('value', (result: any) => {
       if (result) {
-        let datas = Object.entries(result.val()).forEach((val) => {
+        let datas: void = Object.entries(result.val()).forEach((val: any) => {
           const popup = new mapboxgl.Popup({ offset: popupOffsets, className: styles.details })
             .setLngLat([val[1]?.lngCoord, val[1]?.latCoord])
             .setHTML(`<h3>Nome: ${val[1]?.nome} </br>Pontos: 0</br>lat: ${val[1]?.latCoord} lng: ${val[1]?.lngCoord}</h3>`)
@@ -77,18 +83,18 @@ function App(): JSX.Element {
 
   const sendData = (e: FormEvent) => {
     e.preventDefault()
-    const data: data = {
+    const data: any = {
       nome,
       indicadora,
-      lngCoord,
-      latCoord
+      latCoord,
+      lngCoord
     }
     const ref = database.ref('empresa')
     ref.push(data)
     setNome('');
     setIndicadora('');
-    setLatCoord('');
-    setLngCoord('');
+    setLatCoord(0);
+    setLngCoord(0);
     setReloaded(!reloaded);
   }
 
