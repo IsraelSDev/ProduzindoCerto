@@ -3,9 +3,7 @@ import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import styles from '../styles/Home.module.css'
 import Link from 'next/link';
-
-
-import { database, firebase } from '../services/firebase.ts';
+import { database, firebase } from '../services/firebase.js';
 
 interface data {
   nome: string,
