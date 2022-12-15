@@ -11,6 +11,10 @@ interface data {
   lngCoord: number,
   latCoord: number,
 }
+interface reloadedI {
+  reloaded: boolean,
+  setReloaded: boolean
+}
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiaXNyYWVsc29hcmVzIiwiYSI6ImNrdmUyeDhsM2JkYm4yem1udDJ4azA3cnkifQ.Zlsg1JsFYg85GMH6qSAPvQ";
@@ -21,16 +25,16 @@ function App(): JSX.Element {
   const [indicadora, setIndicadora] = useState('');
   const [latCoord, setLatCoord] = useState()
   const [lngCoord, setLngCoord] = useState()
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [reloaded, setReloaded] = useState(false);
+  const mapContainer = useRef<HTMLHeadingElement>(null);
+  const map = useRef<HTMLHeadingElement>(null);
+  const [reloaded, setReloaded] = useState<reloadedI>();
   const [lng, setLng] = useState('');
   const [lat, setLat] = useState('');
   const [zoom, setZoom] = useState(2);
   const markerHeight = 50;
   const markerRadius = 50;
   const linearOffset = 25;
-  const popupOffsets = {
+  const popupOffsets: any = {
     'top': [0, 0],
     'top-left': [0, 0],
     'top-right': [0, 0],
@@ -47,7 +51,6 @@ function App(): JSX.Element {
     ref.on('value', (result: any) => {
       if (result) {
         let datas = Object.entries(result.val()).forEach((val) => {
-          console.log(val[1]?.latCoord);
           const popup = new mapboxgl.Popup({ offset: popupOffsets, className: styles.details })
             .setLngLat([val[1]?.lngCoord, val[1]?.latCoord])
             .setHTML(`<h3>Nome: ${val[1]?.nome} </br>Pontos: 0</br>lat: ${val[1]?.latCoord} lng: ${val[1]?.lngCoord}</h3>`)
