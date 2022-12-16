@@ -33,7 +33,7 @@ function App(): JSX.Element {
   const markerHeight = 50;
   const markerRadius = 50;
   const linearOffset = 25;
-  const popupOffsets = {
+  const popupOffsets: any = {
     'top': [0, 0],
     'top-left': [0, 0],
     'top-right': [0, 0],
