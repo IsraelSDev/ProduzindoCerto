@@ -26,14 +26,14 @@ function App(): JSX.Element {
   const mapContainer = useRef<any>(null);
   const map = useRef<any>(null);
   const [reloaded, setReloaded] = useState<any>();
-  const [lng, setLng] = useState<number>(0);
-  const [lat, setLat] = useState<number>(0);
-  const [zoom, setZoom] = useState<number>(2);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false)
+  const [lng, setLng] = useState<any>('');
+  const [lat, setLat] = useState<any>('');
+  const [zoom, setZoom] = useState<any>(2);
+  const [isUpdating, setIsUpdating] = useState<any>(false)
   const markerHeight = 50;
   const markerRadius = 50;
   const linearOffset = 25;
-  const popupOffsets: any = {
+  const popupOffsets = {
     'top': [0, 0],
     'top-left': [0, 0],
     'top-right': [0, 0],
@@ -49,8 +49,8 @@ function App(): JSX.Element {
     const ref = database.ref('empresa');
     ref.on('value', (result: any) => {
       if (result) {
-        const datas: void = Object.entries(result.val()).forEach((val: any) => {
-          const popup = new mapboxgl.Popup({ offset: popupOffsets, className: styles.details })
+        let datas = Object.entries(result.val()).forEach((val: any) => {
+          const popup: any = new mapboxgl.Popup({ offset: popupOffsets, className: styles.details })
             .setLngLat([val[1]?.lngCoord, val[1]?.latCoord])
             .setHTML(`<h3>Nome: ${val[1]?.nome} </br>Pontos: ${val[1]?.point}</br>lat: ${val[1]?.latCoord} lng: ${val[1]?.lngCoord}</h3>`)
             .setMaxWidth("300px")
@@ -59,22 +59,6 @@ function App(): JSX.Element {
       }
     })
   }
-  const updatePoint = () => {
-    const ref = database.ref('empresa');
-    ref.on('value', (val: any) => {
-      const values = Object.entries(val.val()).forEach((val: any) => {
-        if (val[1]?.nome == indicate) {
-          ref.child(`${val[0]}`).update({ point: val[1]?.point + 10 })
-          setUpdating(false);
-        }
-      })
-    })
-  }
-
-  useEffect(() => {
-    updatePoint();
-  }, [updating])
-
 
   useEffect(() => {
     map.current = new mapboxgl.Map({
@@ -114,10 +98,10 @@ function App(): JSX.Element {
     <div className={styles.form}>
       <form onSubmit={sendData}>
         <h3>Cadastre uma empresa</h3>
-        <input required value={nome} type="text" placeholder="Nome da Empresa:" onChange={(e) => setNome(e.target.value)} />
+        <input required value={nome} type="text" placeholder="Nome da Empresa:" onChange={(e) => setNome(e.target.value.trim())} />
         <input required value={indicadora} type="text" placeholder="Empresa indicadora:" onChange={(e) => {
-          setIndicadora(e.target.value);
-          setIndicate(e.target.value);
+          setIndicadora(e.target.value.trim());
+          setIndicate(e.target.value.trim());
         }} />
         <div className={styles.box_form}>
           <input required value={latCoord} type="number" max={90} min={-90} placeholder="Latitude:" onChange={(e) => setLatCoord(e.target.value)} />
